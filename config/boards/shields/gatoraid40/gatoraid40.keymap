@@ -1,148 +1,125 @@
-/*
- * Copyright (c) 2021 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
- */
-
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/ext_power.h>
 
-#define nubs NON_US_BSLH
-#define sqot SINGLE_QUOTE
+#define DEFAULT 	0
+#define NUMSYM 		1
+#define BLUETOOTH	2
+#define NAV	        3	
 
-&sl     {
-         release-after-ms = <150>;
-         };
+#define screenshot LS(LG(S))
 
-&kscan0 {
-         debounce-period = <10>;
-         };
 
 / {
-        combos {
-                compatible = "zmk,combos";
-                combo_bksp {
-                        timeout-ms = <50>;
-                        key-positions = <19 20>;
-                        bindings = <&kp BACKSPACE>;
+	combos {
+	compatible = "zmk,combos";
+		combo_esc {
+			timeout-ms = <27>;
+			key-positions = <1 2>;
+			bindings = <&kp ESC>;
+		};
+		combo_tab {
+			timeout-ms = <27>;
+			key-positions = <2 3>;
+			bindings = <&kp TAB>;
+		};
+		combo_bpc {
+			timeout-ms = <27>;
+			key-positions = <20 21>;
+			bindings = <&kp BSPC>;
+		};
+		combo_del {
+			timeout-ms = <27>;
+			key-positions = <8 9>;
+			bindings = <&kp DELETE>;
+		};
+		combo_ent {
+			timeout-ms = <27>;
+			key-positions = <21 22>;
+			bindings = <&kp ENTER>;
+		};
+		combo_ask {
+			timeout-ms = <27>;
+			key-positions = <27 28>;
+			bindings = <&kp SLASH>;
+		};
+		combo_z {
+			timeout-ms = <30>;
+			key-positions = <13 25>;
+			bindings = <&kp Z>;
+		};
+		combo_ae {
+                        timeout-ms = <27>;
+                        key-positions = <13 14>;
+                        bindings = <&kp RA(Q) >;
                 };
-                combo_backwards_del {
-                        timeout-ms = <50>;
-                        key-positions = <19 20 21>;
-                        bindings = <&kp LC(BACKSPACE)>;
+                combo_ue {
+                        timeout-ms = <27>;
+                        key-positions = <7 8>;
+                        bindings = <&kp RA(Y) >;
                 };
-                combo_capslock {
-                        timeout-ms = <50>;
-                        key-positions = <16 19>;
-                        bindings = <&kp CAPSLOCK>;
+                combo_oe {
+                        timeout-ms = <27>;
+                        key-positions = <9 10>;
+                        bindings = <&kp RA(P) >;
                 };
-                 combo_tab {
-                        timeout-ms = <50>;
-                        key-positions = <15 16>;
-                        bindings = <&kp TAB>;
+                combo_ss {
+                        timeout-ms = <27>;
+                        key-positions = <14 15>;
+                        bindings = <&kp RA(S) >;
                 };
+    };
+};
+
+/ {
+        behaviors {
+        am: alpha_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "ALPHA_MODS";
+            #binding-cells = <2>;
+            tapping_term_ms = <170>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
         };
+    };
 
-        keymap {
-                compatible = "zmk,keymap";
-
-                default_layer {
-//          -----------------------------------------               -----------------------------------------
-// ---------|   Q   |   W   |   E   |   R   |   T   |     split     |   Y   |   U   |   I   |   O   |   P   |---------
-// |  ESC   |----------------------------------------               ----------------------------------------|   DEL  |
-// ---------|   A   |   S   |   D   |   F   |   G   |     split     |   H   |   J   |   K   |   L   |   '   |---------
-// |  CTRL  |----------------------------------------               ----------------------------------------|   RET  |
-// ---------|   Z   |   X   |   C   |   V   |   B   |     split     |   N   |   M   |   ,   |   .   |   -   |---------
-//          -----------------------------------------               -----------------------------------------
-//                          |  LGUI | LOWER | HYPER |     split     | RAISE |  SPC  | LSHFT |
-//                          -------------------------               -------------------------
-      bindings = <
-    &kp ESC       &kp Q  &kp W   &kp E   &kp R  &kp T  /*split*/  &kp Z  &kp U   &kp I     &kp O   &kp P        &kp DEL
-    &mt LCTRL TAB &kp A  &kp S   &kp D   &kp F  &kp G  /*split*/  &kp H  &kp J   &kp K     &kp L   &kp LS(BSLH) &kp RET
-                  &kp Y  &kp X   &kp C   &kp V  &kp B  /*split*/  &kp N  &kp M   &kp COMMA &kp DOT &kp SLASH 
-                                &kp LGUI &mo 1  &mo 3  /*split*/  &sl 2  &kp SPACE &kp LSHFT
-                        >;
-                sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP>;
-                };
-
-                lower_layer {
-//          -----------------------------------------               -----------------------------------------
-// ---------|       |  PGDN |   UP  |  PGUP |       |     split     |  F12  |       |  PLAY |       |       |---------
-// |  ESC   |----------------------------------------               ----------------------------------------|   DEL  |
-// ---------| HOME  |  LEFT | DOWN  | RIGHT |  END  |     split     |  F11  |  PREV | PAUSE |  NEXT |       |---------
-// |  CTRL  |----------------------------------------               ----------------------------------------|   RET  |
-// ---------|  F1   |   F2  |   F3  |  F4   |  F9   |     split     |  F10  |  F5   |  F6   |  F7   |  F8   |---------
-//          -----------------------------------------               -----------------------------------------
-//                          |       |       |       |     split     |       |  SPC  | LALT  |
-//                          -------------------------               -------------------------
-      bindings = <
-    &kp ESC   &none    &kp PG_DN &kp UP   &kp PG_UP &none    /*split*/  &kp F12  &none      &kp C_PLAY  &none      &none  &kp DEL
-    &kp LCTRL &kp HOME &kp LEFT  &kp DOWN &kp RIGHT &kp END  /*split*/  &kp F11  &kp C_PREV &kp C_PAUSE &kp C_NEXT &none  &kp RET
-              &kp F1   &kp F2    &kp F3   &kp F4    &kp F9   /*split*/  &kp F10  &kp F5     &kp F6      &kp F7     &kp F8 
-                                 &none    &none     &none    /*split*/  &none    &kp SPACE  &kp LALT 
-                        >;
-
-                };
-
-                raise_layer {
-//          -----------------------------------------               -----------------------------------------
-// ---------|   @   |   $   |   €   |   =   |   !   |     split     |   ?   |   ü   |   #   |   ö   |   ^   |---------
-// |  ESC   |----------------------------------------               ----------------------------------------|   DEL  |
-// ---------|   ä   |   ß   |   °   |   &   |   *   |     split     |   {   |   (   |   )   |   }   |   "   |---------
-// |  CTRL  |----------------------------------------               ----------------------------------------|   RET  |
-// ---------|   ~   |   <   |   >   |   |   |   /   |     split     |   [   |   ]   |   ;   |   :   |   _   |---------
-//          -----------------------------------------               -----------------------------------------
-//                          |   `   |   ´   | LSHIFT|     split     |       |  SPC  | ADJUST|
-//                          -------------------------               -------------------------
-      bindings = <
-    &kp ESC   &kp RA(Q)    &kp LS(N4) &kp RA(E)     &kp LS(N0)   &kp LS(N1)   /*split*/  &kp LS(MINUS) &kp LBKT   &kp BSLH      &kp SEMI    &kp GRAVE  &kp DEL
-    &kp LCTRL &kp sqot     &kp MINUS  &kp LS(GRAVE) &kp LS(N6)   &kp LS(RBKT) /*split*/  &kp RA(N7)    &kp LS(N8) &kp LS(N9)    &kp RA(N0)  &kp LS(N2) &kp RET
-              &kp RA(RBKT) &kp nubs   &kp LS(nubs)  &kp RA(nubs) &kp LS(N7)   /*split*/  &kp RA(N8)    &kp RA(N9) &kp LS(COMMA) &kp LS(DOT) &kp LS(SLASH) 
-                                      &kp LS(EQUAL) &kp EQUAL    &sk LSHFT    /*split*/  &none         &kp SPACE  &mo 4
-                        >;
-                        
-                };
-
-                hyper_layer {
-//          -----------------------------------------               -----------------------------------------
-// ---------|       |   $   |   €   |   =   |   !   |     split     |   %   |       |   #   |       |   ^   |---------
-// |  ESC   |----------------------------------------               ----------------------------------------|   DEL  |
-// ---------|   1   |   2   |   3   |   4   |   *   |     split     |   +   |   5   |   6   |   7   |   8   |---------
-// |  CTRL  |----------------------------------------               ----------------------------------------|   RET  |
-// ---------|   ~   |   <   |   >   |   9   |   /   |     split     |   -   |   0   |   ,   |   .   |       |---------
-//          -----------------------------------------               -----------------------------------------
-//                          |       |       |       |     split     |       |  SPC  |       |
-//                          -------------------------               -------------------------
-      bindings = <
-    &kp ESC   &none        &kp LS(N4) &kp RA(E)    &kp LS(N0) &kp LS(N1)    /*split*/  &kp LS(N5) &none  &kp BSLH  &none   &kp GRAVE &kp DEL
-    &kp LCTRL &kp N1       &kp N2     &kp N3       &kp N4     &kp LS(RBKT)  /*split*/  &kp RBKT   &kp N5 &kp N6    &kp N7  &kp N8    &kp RET
-              &kp RA(RBKT) &kp nubs   &kp LS(nubs) &kp N9     &kp LS(N7)    /*split*/  &kp SLASH  &kp N0 &kp COMMA &kp DOT &none 
-                                      &none        &none      &sk LSHFT     /*split*/  &none      &kp SPACE &none
-                        >;
-
-                };
-
-
-                adjust_layer {
-//          -----------------------------------------               -----------------------------------------
-// ---------|  SAT+ |  HUE+ |  ANI+ |  SPI  |  TOG  |     split     |  BT1  |  BT2  |  BT3  |  BT4  |  BT5  |---------
-// |  BRI+  |----------------------------------------               ----------------------------------------| BT CLR |
-// ---------|  SAT- |  HUE- |  ANI+ |  SPD  |       |     split     |       |       |       |       |       |---------
-// |  BRI-  |----------------------------------------               ----------------------------------------|        |
-// ---------|       |       |       |       |       |     split     | RESET |       |       |       |       |---------
-//          -----------------------------------------               -----------------------------------------
-//                          |       |       |       |     split     |       |       |       |
-//                          -------------------------               -------------------------
-      bindings = <
-    &rgb_ug RGB_BRI &rgb_ug RGB_SAI &rgb_ug RGB_HUI &rgb_ug RGB_EFF &rgb_ug RGB_SPI &rgb_ug RGB_TOG  /*split*/  &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &bt BT_CLR
-    &rgb_ug RGB_BRD &rgb_ug RGB_SAD &rgb_ug RGB_HUD &rgb_ug RGB_EFR &rgb_ug RGB_SPD &none            /*split*/  &none        &none        &none        &none        &none        &none
-                    &none           &none           &none           &none           &none            /*split*/  &reset       &none        &none        &none        &none
-                                                    &none           &none           &none            /*split*/  &none        &none        &trans
-                        >;
-
-                };
-        };
+	keymap {
+		compatible = "zmk,keymap";
+		
+		default_layer {
+			bindings = <
+	&none &kp Q            &kp W         &kp E         &kp R         &kp T            &kp Y            &kp U            &kp I            &kp O            &kp           &none
+        &none &am LGUI A       &am LALT S    &am LCTRL D   &am LSHFT F   &kp G            &kp H            &am RSHFT J      &am RCTRL K      &am RALT L       &am RGUI SEMI &none
+	&none                  &kp X         &kp C         &kp V         &lt BLUETOOTH B  &kp N            &kp M            &am RGUI CMMA         &am RSHFT DOT &none        
+                                             &hone         &mo NAV       &kp LSHFT        &lt NUMSYM SPACE &kp RALT         &none  
+			>;
+		};
+		numsym_layer {
+			bindings = <
+	&none &kp N1           &kp N2        &kp N3        &kp N4        &kp N5           &kp N6           &kp N7           &kp N8           &kp N9           &kp N0            &none
+	&none &am LGUI EXCL    &am LALT AT   &am LCTRL HASH &am LSHFT DLLR &kp PERCENT    &kp GRAVE        &am RSHFT PLUS   &am RCTRL MINUS  &am RALT KP_ASTERISK &am RGUI SQT  &none
+	&none                  &kp LPAR      &kp RPAR      &kp RBKT      &trans           &kp BACKSLASH    &kp SEMICOLON    &kp SQT          &am RSHFT EQUAL      &none   
+                                             &trans &trans &trans &trans &trans &trans
+			>;
+		};
+		bluetooth_layer {
+			bindings = <
+	&none &bootloader      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3     &bt BT_SEL 4     &none           &none             &none            &bt BT_DIS &none
+	&none &none            &none         &none         &none         &none            &none            &none           &none             &none            &reset     &none
+	&none            &none         &none         &none         &trans           &none            &none           &none             &none &bt BT_CLR    
+                                                     &none &none &none &none &none &none
+			>;
+		};
+		nav_layer {
+			bindings = <
+	&none &kp F1           &kp F2        &kp F3        &kp F4        &none            &none            &kp LC(LEFT)     &kp UP           &kp LC(RIGHT)    &kp screenshot   &none
+	&none &am LCTRL F5     &kp F6        &kp F7        &kp F8        &none            &none            &kp LEFT         &kp DOWN         &kp RIGHT        &none            &none
+	&none     &kp F10       &kp F11       &kp F12       &trans           &kp C_PREV       &kp C_PP         &kp C_NEXT       &kp C_VOL_UP &kp C_VOL_DN      
+                                        &trans &trans &trans &trans &trans &trans
+			>;
+		};
+	};
 };
