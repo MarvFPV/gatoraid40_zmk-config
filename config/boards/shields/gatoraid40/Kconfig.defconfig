@@ -1,0 +1,9 @@
+# Copyright (c) 2021 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+if SHIELD_GATORAID40
+
+config ZMK_KEYBOARD_NAME
+    default "gatoraid40"
+
+endif
