@@ -1,9 +1,8 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/rgb.h>
-#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/outputs.h>
 
 #define DEFAULT 	0
 #define NUMSYM 		1
@@ -96,6 +95,7 @@
 	&none                  &kp X         &kp C         &kp V         &lt BLUETOOTH B  &kp N            &kp M            &am RGUI CMMA         &am RSHFT DOT &none        
                                              &hone         &mo NAV       &kp LSHFT        &lt NUMSYM SPACE &kp RALT         &none  
 			>;
+                sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP &inc_dec_kp C_VOL_DN C_VOL_UP>;
 		};
 		numsym_layer {
 			bindings = <
